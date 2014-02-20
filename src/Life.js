@@ -1,5 +1,29 @@
 var LIFE = {
 
+    _cellStates: [],
+
+    getCellState: function(coordinates) {
+
+        if (typeof this._cellStates[coordinates.x] === 'undefined' ||
+            typeof this._cellStates[coordinates.x][coordinates.y] === 'undefined') {
+            return false;
+        }
+        return this._cellStates[coordinates.x][coordinates.y];
+    },
+
+    setCellState: function(coordinates, state) {
+
+        if (coordinates.x < 0 || coordinates.y < 0) {
+            throw new RangeError;
+        }
+
+        if (typeof this._cellStates[coordinates.x] === 'undefined') {
+            this._cellStates[coordinates.x] = [];
+        }
+
+        this._cellStates[coordinates.x][coordinates.y] = state;
+    },
+
     getNeighbors: function(x, y) {
         var neighbors = [];
         for (var i = x - 1; i <= x + 1; i++) {
@@ -18,12 +42,12 @@ var LIFE = {
 
     getNextCellState: function(currentCellState, numberOfLivingNeighbors) {
         if (
-            (currentCellState === 0 && numberOfLivingNeighbors === 3) ||
-            (currentCellState === 1 && (numberOfLivingNeighbors === 2 || numberOfLivingNeighbors === 3))
+            (currentCellState === false && numberOfLivingNeighbors === 3) ||
+            (currentCellState === true && (numberOfLivingNeighbors === 2 || numberOfLivingNeighbors === 3))
             ) {
-            return 1;
+            return true;
         } else {
-            return 0;
+            return false;
         }
     }
 };
