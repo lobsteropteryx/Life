@@ -26,20 +26,29 @@ var LIFE = (function() { 'use strict';
             this._cellStates[coordinates.x][coordinates.y] = state;
         },
 
-        getNeighbors: function(x, y) {
+        getNeighbors: function(coordinates) {
             var neighbors = [], i, j;
-            for (i = x - 1; i <= x + 1; i++) {
-                for (j = y - 1; j <= y + 1; j++) {
-                    if (!((i === x) && (j === y))) {
-                        neighbors.push([i, j]);
+            for (i = coordinates.x - 1; i <= coordinates.x + 1; i++) {
+                for (j = coordinates.y - 1; j <= coordinates.y + 1; j++) {
+                    if (!((i === coordinates.x) && (j === coordinates.y))) {
+                        neighbors.push({x: i, y: j});
                     }
                 }
             }
             return neighbors;
         },
 
-        countLiveNeighbors: function(x, y, grid) {
-            return 0;
+        countLiveNeighbors: function(coordinates) {
+            var neighbors, i, numberOfLiveNeighbors;
+            numberOfLiveNeighbors = 0;
+            neighbors = this.getNeighbors(coordinates);
+
+            for (i = 0; i < neighbors.length; i++) {
+                if (this.getCellState(neighbors[i])) {
+                    numberOfLiveNeighbors += 1;
+                }
+            }
+            return numberOfLiveNeighbors;
         },
 
         getNextCellState: function(currentCellState, numberOfLivingNeighbors) {

@@ -63,43 +63,85 @@ describe("Life", function() { 'use strict';
 
     describe("Get Neighbors", function() {
         it("Returns 8 cells given a single cell", function() {
-            expect(LIFE.getNeighbors(1, 1).length).toEqual(8);
+            expect(LIFE.getNeighbors({x: 1, y: 1}).length).toEqual(8);
         });
 
         it("Returns expected cells for 1, 1", function() {
             var expectedCells = [
-               [0,0], [0,1], [0,2], [1,0], [1,2], [2,0], [2,1], [2,2]
+               {x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 2}, {x: 1, y: 0}, {x: 1, y: 2}, {x: 2, y: 0}, {x: 2, y: 1}, {x: 2, y: 2}
             ];
-            expect(LIFE.getNeighbors(1, 1)).toEqual(expectedCells);
+            expect(LIFE.getNeighbors({x: 1, y: 1})).toEqual(expectedCells);
         });
 
         it("Returns expected cells for 0, 0", function() {
             var expectedCells = [
-                [-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]
+                {x: -1, y: -1}, {x: -1, y: 0}, {x: -1, y: 1}, {x: 0, y: -1}, {x: 0, y: 1}, {x: 1, y: -1}, {x: 1, y: 0}, {x: 1, y: 1}
             ];
-            expect(LIFE.getNeighbors(0, 0)).toEqual(expectedCells);
+            expect(LIFE.getNeighbors({x: 0, y: 0})).toEqual(expectedCells);
         });
 
         it("Returns expected cells for 2, 2", function() {
             var expectedCells = [
-                [1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]
+                {x: 1, y: 1}, {x: 1, y: 2}, {x: 1, y: 3}, {x: 2, y: 1}, {x: 2, y: 3}, {x: 3, y: 1}, {x: 3, y: 2}, {x: 3, y: 3}
             ];
-            expect(LIFE.getNeighbors(2, 2)).toEqual(expectedCells);
+            expect(LIFE.getNeighbors({x: 2, y: 2})).toEqual(expectedCells);
         });
     });
 
     describe("Count Live Neighbors", function() {
-        describe("Center cell in a block of 9", function() {
 
-            var grid = [
+        it("Returns 0 for all dead neighbors", function() {
+            LIFE._cellStates = [
                 [false, false, false],
                 [false, false, false],
                 [false, false, false]
             ];
+            expect(LIFE.countLiveNeighbors({x: 1, y: 1})).toEqual(0);
+        });
+        
+        it("Returns 8 for all live neighbors", function() {
+            LIFE._cellStates = [
+                [true, true, true],
+                [true, true, true],
+                [true, true, true]
+            ];
+            expect(LIFE.countLiveNeighbors({x: 1, y: 1})).toEqual(8);
+        });
 
-            it("Returns false for all dead neighbors", function() {
-                expect(LIFE.countLiveNeighbors(1, 1, grid)).toEqual(0);
-            });
+        it("Returns 3 for all live neighbors and corner cell", function() {
+            LIFE._cellStates = [
+                [true, true, true],
+                [true, true, true],
+                [true, true, true]
+            ];
+            expect(LIFE.countLiveNeighbors({x: 0, y: 0})).toEqual(3);
+        });
+
+        it("Returns 0 when all neighbors are outside of the grid", function() {
+            LIFE._cellStates = [
+                [true, true, true],
+                [true, true, true],
+                [true, true, true]
+            ];
+            expect(LIFE.countLiveNeighbors({x: 99, y: 99})).toEqual(0);
+        });
+
+        it("Returns 3 for all live neighbors and one below bottom center", function() {
+            LIFE._cellStates = [
+                [true, true, true],
+                [true, true, true],
+                [true, true, true]
+            ];
+            expect(LIFE.countLiveNeighbors({x: 3, y: 1})).toEqual(3);
+        });
+
+        it("Returns 4 for a mix of live and dead and the center cell", function() {
+            LIFE._cellStates = [
+                [true, false, true],
+                [false, true, false],
+                [true, true, false]
+            ];
+            expect(LIFE.countLiveNeighbors({x: 1, y: 1})).toEqual(4);
         });
     });
 
