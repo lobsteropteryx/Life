@@ -1,4 +1,4 @@
-describe("Life", function() {
+describe("Life", function() { 'use strict';
 
     describe("Getting and setting cell state", function() {
 
@@ -53,9 +53,9 @@ describe("Life", function() {
                 expectSetsCellState({x: 0, y: 3}, true);
             });
 
-            it("Throws a RangeError for a negative coordinates", function() {
-                expect(function() {LIFE.setCellState({x: -1, y: 0}, false)}).toThrow(new RangeError);
-                expect(function() {LIFE.setCellState({x: 0, y: -1}, false)}).toThrow(new RangeError);
+            it("Throws a RangeError for a negative coordinates", function () {
+                expect(function () {LIFE.setCellState({x: -1, y: 0}, false); }).toThrow(new RangeError());
+                expect(function () {LIFE.setCellState({x: 0, y: -1}, false); }).toThrow(new RangeError());
             });
         });
 
@@ -67,10 +67,10 @@ describe("Life", function() {
         });
 
         it("Returns expected cells for 1, 1", function() {
-           var expectedCells = [
+            var expectedCells = [
                [0,0], [0,1], [0,2], [1,0], [1,2], [2,0], [2,1], [2,2]
-           ];
-           expect(LIFE.getNeighbors(1, 1)).toEqual(expectedCells);
+            ];
+            expect(LIFE.getNeighbors(1, 1)).toEqual(expectedCells);
         });
 
         it("Returns expected cells for 0, 0", function() {
@@ -139,7 +139,7 @@ describe("Life", function() {
 
             it("returns dead given all dead neighbors", function() {
                 expectReturnsDead(currentState, 0);
-            })
+            });
 
             it("returns dead given more than 3 live neighbors", function() {
                 expectReturnsDead(currentState, 4);
