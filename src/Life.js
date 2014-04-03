@@ -1,10 +1,33 @@
 var LIFE = (function() { 'use strict';
-
     return {
 
         _cellStates: [],
 
-        getCellState: function(coordinates) {
+        getNextState: function(currentState) {
+
+            var liveCellsWithNeighbors = [];
+            var x = [];
+            var i;
+            var cell;
+
+            for(i = 0; i < currentState.length; i++){
+                cell = currentState[i];
+                liveCellsWithNeighbors.push(cell);
+                liveCellsWithNeighbors.push.apply(liveCellsWithNeighbors, this.getNeighbors(cell));
+            }
+
+            for (i = 0; i < liveCellsWithNeighbors.length; i++) {
+                cell = liveCellsWithNeighbors[i];
+                var currentCellState = this.getNextCellState(cell);
+                var liveNeighbors = this.countLiveNeighbors(cell);
+                if (this.getNextCellState(currentCellState, liveNeighbors)) {
+                    x.push(cell);
+                }
+            }
+            return x;
+        },
+
+        isAlive: function(coordinates) {
 
             if (this._cellStates[coordinates.x] === undefined ||
                 this._cellStates[coordinates.x][coordinates.y] === undefined) {
@@ -13,7 +36,7 @@ var LIFE = (function() { 'use strict';
             return this._cellStates[coordinates.x][coordinates.y];
         },
 
-        setCellState: function(coordinates, state) {
+        setAlive: function(coordinates) {
 
             if (coordinates.x < 0 || coordinates.y < 0) {
                 throw new RangeError();
@@ -23,7 +46,7 @@ var LIFE = (function() { 'use strict';
                 this._cellStates[coordinates.x] = [];
             }
 
-            this._cellStates[coordinates.x][coordinates.y] = state;
+            this._cellStates[coordinates.x][coordinates.y] = true;
         },
 
         getNeighbors: function(coordinates) {
@@ -44,7 +67,7 @@ var LIFE = (function() { 'use strict';
             neighbors = this.getNeighbors(coordinates);
 
             for (i = 0; i < neighbors.length; i++) {
-                if (this.getCellState(neighbors[i])) {
+                if (this.isAlive(neighbors[i])) {
                     numberOfLiveNeighbors += 1;
                 }
             }

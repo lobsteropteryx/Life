@@ -1,5 +1,24 @@
 describe("Life", function() { 'use strict';
 
+    describe("Computes next generation", function() {
+       it("Returns no live cells, given no live cells", function() {
+          var currentLiveCoordinates = [];
+          expect(LIFE.getNextState(currentLiveCoordinates)).toEqual([]);
+       });
+
+        it("Returns no live cells, given a single live cell", function() {
+            var currentLiveCoordinates = [{x: 0, y: 0 }];
+            expect(LIFE.getNextState(currentLiveCoordinates)).toEqual([]);
+        });
+
+        it("Returns no live cells, given two live cells", function() {
+            var currentLiveCoordinates = [{x: 0, y: 0 }, {x: 2, y: 2}];
+            LIFE.setAlive({x: 0, y: 0});
+            LIFE.setAlive({x: 2, y: 2});
+            expect(LIFE.getNextState(currentLiveCoordinates)).toEqual([{x: 1, y: 1}]);
+        });
+    });
+
     describe("Getting and setting cell state", function() {
 
         beforeEach(function() {
@@ -14,48 +33,45 @@ describe("Life", function() { 'use strict';
 
             it("Returns live for a live cell", function() {
                LIFE._cellStates[0][0] = true;
-               expect(LIFE.getCellState({x: 0, y: 0})).toEqual(true);
+               expect(LIFE.isAlive({x: 0, y: 0})).toEqual(true);
             });
 
             it("Returns dead for a dead cell", function() {
                 LIFE._cellStates[0][0] = false;
-                expect(LIFE.getCellState({x: 0, y: 0})).toEqual(false);
+                expect(LIFE.isAlive({x: 0, y: 0})).toEqual(false);
             });
 
            it("Returns dead for undefined x", function() {
-                expect(LIFE.getCellState({x: 3, y: 0})).toEqual(false);
-                expect(LIFE.getCellState({x: -1, y: 0})).toEqual(false);
+                expect(LIFE.isAlive({x: 3, y: 0})).toEqual(false);
+                expect(LIFE.isAlive({x: -1, y: 0})).toEqual(false);
             });
 
             it("Returns dead for undefined y", function() {
-                expect(LIFE.getCellState({x: 0, y: 3})).toEqual(false);
-                expect(LIFE.getCellState({x: 0, y: -1})).toEqual(false);
+                expect(LIFE.isAlive({x: 0, y: 3})).toEqual(false);
+                expect(LIFE.isAlive({x: 0, y: -1})).toEqual(false);
             });
         });
 
         describe("Setting cell state", function() {
 
-            var expectSetsCellState = function(coordinate, state) {
-                LIFE.setCellState(coordinate, state);
-                expect(LIFE._cellStates[coordinate.x][coordinate.y]).toEqual(state);
+            beforeEach(function() {
+                LIFE._cellStates = [];
+            });
+
+            var expectSetsCellState = function(coordinate) {
+                LIFE.setAlive(coordinate);
+                expect(LIFE._cellStates[coordinate.x][coordinate.y]).toEqual(true);
             };
 
-            it("Sets a cell to dead", function() {
-                expectSetsCellState({x: 0, y: 0}, false);
-            });
-
             it("Sets a cell to live", function() {
-                expectSetsCellState({x: 0, y: 0}, true);
-            });
-
-            it("Sets an undefined cell to dead", function() {
-                expectSetsCellState({x: 3, y: 0}, true);
-                expectSetsCellState({x: 0, y: 3}, true);
+                expectSetsCellState({x: 0, y: 0});
+                expectSetsCellState({x: 3, y: 0});
+                expectSetsCellState({x: 0, y: 3});
             });
 
             it("Throws a RangeError for a negative coordinates", function () {
-                expect(function () {LIFE.setCellState({x: -1, y: 0}, false); }).toThrow(new RangeError());
-                expect(function () {LIFE.setCellState({x: 0, y: -1}, false); }).toThrow(new RangeError());
+                expect(function () {LIFE.setAlive({x: -1, y: 0}); }).toThrow(new RangeError());
+                expect(function () {LIFE.setAlive({x: 0, y: -1}); }).toThrow(new RangeError());
             });
         });
 
