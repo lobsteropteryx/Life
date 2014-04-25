@@ -8,10 +8,11 @@ describe("Life", function() { 'use strict';
 
         it("Returns no live cells, given a single live cell", function() {
             var currentLiveCoordinates = [{x: 0, y: 0 }];
+            LIFE.setAlive({x: 0, y: 0});
             expect(LIFE.getNextState(currentLiveCoordinates)).toEqual([]);
         });
 
-        it("Returns no live cells, given two live cells", function() {
+        it("Returns one live cell, given two live cells", function() {
             var currentLiveCoordinates = [{x: 0, y: 0 }, {x: 2, y: 2}];
             LIFE.setAlive({x: 0, y: 0});
             LIFE.setAlive({x: 2, y: 2});

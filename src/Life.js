@@ -3,28 +3,28 @@ var LIFE = (function() { 'use strict';
 
         _cellStates: [],
 
-        getNextState: function(currentState) {
+        getNextState: function(liveCells) {
 
-            var liveCellsWithNeighbors = [];
-            var x = [];
+            var liveCellsAndNeighbors = [];
+            var nextGenerationLiveCells = [];
             var i;
             var cell;
 
-            for(i = 0; i < currentState.length; i++){
-                cell = currentState[i];
-                liveCellsWithNeighbors.push(cell);
-                liveCellsWithNeighbors.push.apply(liveCellsWithNeighbors, this.getNeighbors(cell));
+            for(i = 0; i < liveCells.length; i++){
+                cell = liveCells[i];
+                liveCellsAndNeighbors.push(cell);
+                liveCellsAndNeighbors.push.apply(liveCellsAndNeighbors, this.getNeighbors(cell));
             }
 
-            for (i = 0; i < liveCellsWithNeighbors.length; i++) {
-                cell = liveCellsWithNeighbors[i];
-                var currentCellState = this.getNextCellState(cell);
+            for (i = 0; i < liveCellsAndNeighbors.length; i++) {
+                cell = liveCellsAndNeighbors[i];
+                var cellState = this.isAlive(cell);
                 var liveNeighbors = this.countLiveNeighbors(cell);
-                if (this.getNextCellState(currentCellState, liveNeighbors)) {
-                    x.push(cell);
+                if (this.getNextCellState(cellState, liveNeighbors)) {
+                    nextGenerationLiveCells.push(cell);
                 }
             }
-            return x;
+            return nextGenerationLiveCells;
         },
 
         isAlive: function(coordinates) {
