@@ -2,19 +2,21 @@ var LIFE = (function() { 'use strict';
     return {
 
         _cellStates: [],
+        _liveCells: [],
 
-        getNextState: function(liveCells) {
+        getNextState: function() {
 
             var liveCellsAndNeighbors = [];
             var nextGenerationLiveCells = [];
             var i;
             var cell;
 
-            for(i = 0; i < liveCells.length; i++){
-                cell = liveCells[i];
+            for(i = 0; i < this._liveCells.length; i++){
+                cell = this._liveCells[i];
                 liveCellsAndNeighbors.push(cell);
                 liveCellsAndNeighbors.push.apply(liveCellsAndNeighbors, this.getNeighbors(cell));
             }
+            liveCellsAndNeighbors = _.uniq(liveCellsAndNeighbors);
 
             for (i = 0; i < liveCellsAndNeighbors.length; i++) {
                 cell = liveCellsAndNeighbors[i];
@@ -47,6 +49,9 @@ var LIFE = (function() { 'use strict';
             }
 
             this._cellStates[coordinates.x][coordinates.y] = true;
+
+
+            this._liveCells.push(coordinates);
         },
 
         getNeighbors: function(coordinates) {

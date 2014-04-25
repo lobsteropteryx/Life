@@ -1,22 +1,32 @@
 describe("Life", function() { 'use strict';
 
+    describe("Object equality", function() {
+       it("sucks", function() {
+           expect({x: 0, y: 0} === {x: 0, y: 0}).toBeFalsy();
+       });
+    });
+
     describe("Computes next generation", function() {
+
+        beforeEach(function() {
+            LIFE._cellStates = [];
+            LIFE._liveCells = [];
+        });
+
        it("Returns no live cells, given no live cells", function() {
-          var currentLiveCoordinates = [];
-          expect(LIFE.getNextState(currentLiveCoordinates)).toEqual([]);
+          expect(LIFE.getNextState()).toEqual([]);
        });
 
         it("Returns no live cells, given a single live cell", function() {
-            var currentLiveCoordinates = [{x: 0, y: 0 }];
             LIFE.setAlive({x: 0, y: 0});
-            expect(LIFE.getNextState(currentLiveCoordinates)).toEqual([]);
+            expect(LIFE.getNextState()).toEqual([]);
         });
 
         it("Returns one live cell, given two live cells", function() {
-            var currentLiveCoordinates = [{x: 0, y: 0 }, {x: 2, y: 2}];
             LIFE.setAlive({x: 0, y: 0});
+            LIFE.setAlive(({x: 2, y: 0}));
             LIFE.setAlive({x: 2, y: 2});
-            expect(LIFE.getNextState(currentLiveCoordinates)).toEqual([{x: 1, y: 1}]);
+            expect(LIFE.getNextState()).toEqual([{x: 1, y: 1}]);
         });
     });
 
@@ -57,11 +67,14 @@ describe("Life", function() { 'use strict';
 
             beforeEach(function() {
                 LIFE._cellStates = [];
+                LIFE._liveCells = [];
             });
 
             var expectSetsCellState = function(coordinate) {
+                LIFE._liveCells = [];
                 LIFE.setAlive(coordinate);
                 expect(LIFE._cellStates[coordinate.x][coordinate.y]).toEqual(true);
+                expect(LIFE._liveCells).toEqual([coordinate]);
             };
 
             it("Sets a cell to live", function() {
