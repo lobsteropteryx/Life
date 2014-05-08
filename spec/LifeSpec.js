@@ -6,6 +6,26 @@ describe("Life", function() { 'use strict';
        });
     });
 
+    describe("Sets Grid", function() {
+        it("Can set the grid state base on an empty array", function() {
+            LIFE.setGridState([]);
+            expect(LIFE._cellStates).toEqual([]);
+            expect(LIFE._liveCells).toEqual([]);
+        });
+
+        it("Can set the grid state base on a single live cell", function() {
+            LIFE.setGridState([{x: 0, y: 0}]);
+            expect(LIFE._cellStates).toEqual([[true]]);
+            expect(LIFE._liveCells).toEqual([{x: 0, y: 0}]);
+        });
+
+        it("Ignores negative coordinates", function() {
+            LIFE.setGridState([{x: -1, y: 0}, {x: 0, y: 0}, {x: 0, y: -1}]);
+            expect(LIFE._cellStates).toEqual([[true]]);
+            expect(LIFE._liveCells).toEqual([{x: 0, y: 0}]);
+        });
+    });
+
     describe("Computes next generation", function() {
 
         beforeEach(function() {
@@ -22,11 +42,33 @@ describe("Life", function() { 'use strict';
             expect(LIFE.getNextState()).toEqual([]);
         });
 
-        it("Returns one live cell, given two live cells", function() {
+        it("Comes to life when there are three live neighbors", function() {
             LIFE.setAlive({x: 0, y: 0});
             LIFE.setAlive(({x: 2, y: 0}));
             LIFE.setAlive({x: 2, y: 2});
             expect(LIFE.getNextState()).toEqual([{x: 1, y: 1}]);
+        });
+
+        it("Stays alive when there are two live neighbors", function() {
+            LIFE.setAlive({x: 0, y: 0});
+            LIFE.setAlive({x: 1, y: 1});
+            LIFE.setAlive({x: 2, y: 2});
+            expect(LIFE.getNextState()).toEqual([{x: 1, y: 1}]);
+        });
+
+        it("Reproduces the Block pattern", function() {
+            LIFE.setAlive({x: 0, y: 0});
+            LIFE.setAlive({x: 0, y: 1});
+            LIFE.setAlive({x: 1, y: 1});
+            LIFE.setAlive({x: 1, y: 0});
+            expect(LIFE.getNextState()).toEqual([{x: 0, y: 0}, {x: 0, y: 1}, {x: 1, y: 0}, {x: 1, y: 1}]);
+        });
+
+        it("Reproduces the Blinker pattern", function() {
+            LIFE.setAlive({x: 0, y: 1});
+            LIFE.setAlive({x: 1, y: 1});
+            LIFE.setAlive({x: 2, y: 1});
+            expect(LIFE.getNextState()).toEqual([{x: 1, y: 0}, {x: 1, y: 1}, {x: 1, y: 2}]);
         });
     });
 
