@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Life</title>
+    <script type="text/javascript" src="src/Life.js"></script>
+</head>
+<body>
+    <div id="divGrid">
+        <canvas id="canvas" width="1000" height="1000">
+        </canvas>
+    </div>
+    <script>
+        var i, j, ctx, canvas = document.getElementById('canvas');
+        if (canvas.getContext) {
+            ctx = canvas.getContext('2d');
+
+            for (i =0; i < 100; i++) {
+                for (j = 0; j < 100; j++) {
+                    if ( Math.random() > 0.9) {
+                        LIFE.setAlive({x: i, y: j});
+                    }
+                }
+            }
+
+            window.setInterval( function() {
+                var i, cell, liveCells;
+                ctx.clearRect(0,0,1000,1000);
+                liveCells = LIFE.getNextState();
+                LIFE.setGridState(liveCells);
+                for (i = 0; i < liveCells.length; i++){
+                    cell = liveCells[i];
+                    ctx.fillRect(cell.x * 6, cell.y * 6, 5, 5);
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
